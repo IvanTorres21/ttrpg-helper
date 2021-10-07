@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-kQtW33rZJAHjgefvhyyzcGF3C5TFyBQBA13V1RKPf4uH+bwyzQxZ6CmMZHmNBEfJ" crossorigin="anonymous"></script>
+
+    <!-- Style -->
+    <style>
+        .imgSlave {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #master {
+            height: 100vh;
+            width: 100vw;
+            margin-right: 5%;
+        }
+
+        .btnStop {
+            position: fixed;
+            display: block;
+            width: 150px;
+            margin-top: 5%;
+            margin-bottom: -5%;
+            margin-left: auto; 
+            margin-right: auto;
+            left: 0;
+            right: 0;
+        }
+
+        .btnChange {
+            position: fixed;
+            display: block;
+            width: 70px;
+            margin-top: 5%;
+            margin-bottom: -5%;
+            left: 10;
+            right: 0;
+        }
+
+        #images {
+            margin: 100px 15%;
+        }
+
+        #music {
+            margin: 5% 15%;
+        }
+        
+        .imagePicker {
+            display: block;
+            margin: 2% auto;
+            width: 80vw;
+            height: 30vh;
+        }
+
+        .songPicker {
+            margin: 5% auto;
+            text-align: center;
+        }
+
+        #currentSong {
+            margin: 0 auto;
+            text-align: center;
+        }
+
+    </style>
+
+    <!-- Server -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io('http://192.168.1.47:3000/')
+        
+        // IMAGE CONTROLS
+        socket.on('changeImage', data =>  changeImage(data))
+       
+        /**
+         * Changes the image
+         **/
+        function changeImage(url) {
+            document.getElementById("back").src =  url;
+        }
+
+
+        /**
+         * Sends a new image
+         **/
+        function sendData(url) {
+            console.log(url);
+            socket.emit('sendImage', 'assets/images/' + url);
+            
+        }
+
+        // AUDIO CONTROLS
+
+        socket.on('playAudio', data =>  playAudio(data))
+        var audioElement0 = document.createElement('audio');
+        var playing = false;
+
+        /**
+         * Plays a track
+         **/
+        function playAudio(url) { 
+            playing = true;
+            audioElement0.src = url;
+            audioElement0.loop = true;
+            audioElement0.play(); 
+        }
+
+        function changeCurrentSong(name) {
+            document.getElementById("currentSong").innerHTML = name;
+        }
+
+        /**
+         * Sends a track
+         **/
+        function sendAudio(url) {
+            audioElement0.pause();
+            socket.emit('sendAudio', 'assets/music/' + url);
+        }
+
+        /**
+         * Sends an order to change the state
+         **/
+        function pauseResume() {
+            socket.emit('pauseResume');
+        }
+
+        /**
+         * Changes the state
+         **/
+        socket.on('pauseResume', data => changeAudioState())
+
+        function changeAudioState() {
+            if(playing)
+                audioElement0.pause();
+            else
+                audioElement0.play();
+            
+            playing = !playing;
+        }
+    </script>
+
+    <script>
+        // CONTROLS MAIN MENU
+        function showSlave() {
+            document.getElementById('master').style.display = "none";
+            document.getElementById('slave').style.display = "block";
+            document.getElementById('menu').style.display = "none";
+        }
+
+        function showMaster() {
+            readImages();
+            readTracks();
+            document.getElementById('music').display = "none"
+            document.getElementById('master').style.display = "block";
+            document.getElementById('slave').style.display = "none";
+            document.getElementById('menu').style.display = "none";
+        }
+
+        function hideMenus() {
+            document.getElementById('master').style.display = "none";
+            document.getElementById('slave').style.display = "none";
+            document.getElementById('menu').style.display = "block";
+        }
+
+        // CONTROLS MOVEMENT OF MENUS
+        var images = true;
+        function moveMenu() {
+            if(images) {
+                document.getElementById('images').style.display = "none"
+                document.getElementById('music').style.display = "block"
+            }
+            else {
+                document.getElementById('music').style.display = "none"
+                document.getElementById('images').style.display = "block"
+            }
+            images = !images;
+                
+        }
+    </script>
+
+    <script>
+        
+        /**
+         * Loads the images from the json
+         **/
+        function readImages() {
+            var xobj = new XMLHttpRequest();
+            xobj.overrideMimeType("application/json");
+            xobj.open('GET', 'json/images.json', true);
+            xobj.onreadystatechange = function () {
+                if(xobj.readyState == 4 && xobj.status == "200")  {
+                    loadJSON(xobj.responseText);
+                }
+            }
+            xobj.send(null)
+        }
+
+        /**
+         * Creates html from the json images 
+         **/
+        function loadJSON(response)  {
+            json = JSON.parse(response);
+            console.log(json);
+
+            var title = document.createElement("h1");
+            title.appendChild(document.createTextNode('Nature'))
+            var div = document.createElement("div");
+            div.id = "nature";
+            div.appendChild(title);
+            document.getElementById('images').appendChild(div);
+            json['Nature'].forEach((element => {
+                var image = document.createElement("img");
+                image.src = 'assets/images/' + element;
+                image.className = 'imagePicker';
+                image.setAttribute("onclick", "sendData('" + element.toString() + "');")
+                document.getElementById('nature').appendChild(image);
+            }));
+
+            var title = document.createElement("h1");
+            title.appendChild(document.createTextNode('Ocean'))
+            var div = document.createElement("div");
+            div.id = "ocean";
+            div.appendChild(title);
+            document.getElementById('images').appendChild(div);
+            json['Ocean'].forEach((element => {
+                var image = document.createElement("img");
+                image.src = 'assets/images/' + element;
+                image.className = 'imagePicker';
+                image.setAttribute("onclick", "sendData('" + element.toString() + "');")
+                document.getElementById('ocean').appendChild(image);
+            }));
+        };
+
+        /**
+         * Loads the music from the json
+         **/
+         function readTracks() {
+            var xobj = new XMLHttpRequest();
+            xobj.overrideMimeType("application/json");
+            xobj.open('GET', 'json/music.json', true);
+            xobj.onreadystatechange = function () {
+                if(xobj.readyState == 4 && xobj.status == "200")  {
+                    loadJSONMusic(xobj.responseText);
+                }
+            }
+            xobj.send(null)
+        }
+
+        /**
+         * Creates html from the json images 
+         **/
+        function loadJSONMusic(response)  {
+            json = JSON.parse(response);
+            console.log(json);
+            json.forEach(element => {
+                var title = document.createElement("h3");
+                title.className = "songPicker";
+                title.appendChild(document.createTextNode(element['name'] + ' (' + element['type'] + ')'))
+                title.setAttribute("onclick", "sendAudio('" + element['url'] + "'); changeCurrentSong('" + element['name'] + "')")
+                document.getElementById('music').appendChild(title);
+            });
+        };
+    </script>
+</head>
+
+<body onload="hideMenus()">
+   <div  id="menu">
+    <button onclick="showSlave()">Become Display</button>
+
+    <button onclick="showMaster()">Become Controller</button>
+   </div>
+
+   <div id="master" style="display: flexbox; width: 100vw;">
+    <button class="btnStop" onclick="pauseResume()">STOP MUSIC</button>
+    <button class="btnChange" onclick="moveMenu()">>>></button>
+       <div style="height: 15%;"></div>
+       <div id="images">
+       </div>
+       <div id="music">
+           <h4 style="margin-top: -10px; text-align: center;"><b id="currentSong"></b></h4>
+       </div>
+   </div>
+
+   <div id="slave">
+    <img class="imgSlave" id="back" src="" alt="">
+   </div>
+</body>
+</html>
