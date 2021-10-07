@@ -1,9 +1,13 @@
 {
-    "Nature" : [
+    "Forest" : [
         "forest.jpg",
         "magic_forest.jpg"
     ],
     "Ocean" : [
         "ocean.jpg"
+    ],
+    "City" : [
+        "city1.jpg",
+        "city2.jpg"
     ]
 }

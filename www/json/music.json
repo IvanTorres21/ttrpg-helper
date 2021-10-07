@@ -1,4 +1,6 @@
 [
-    {"name" : "Dead beats", "type" : "Rap", "url" : "track.mp3"},
-    {"name" : "Dead again", "type" : "Pop", "url" : "track2.mp3"}
+    {"name" : "Elven Forest", "type" : "Elven, calm", "url" : "track1.mp3"},
+    {"name" : "In The Clouds", "type" : "Happy, fairies", "url" : "track2.mp3"},
+    {"name" : "Beautiful Village", "type" : "Celtic", "url" : "track3.mp3"},
+    {"name" : "Broken Village", "type" : "Sad, Nordic", "url" : "track4.mp3"}
 ]

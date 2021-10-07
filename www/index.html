@@ -11,6 +11,13 @@
 
     <!-- Style -->
     <style>
+        
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+        }
+
         .imgSlave {
             width: 100vw;
             height: 100vh;
@@ -22,51 +29,64 @@
             margin-right: 5%;
         }
 
-        .btnStop {
-            position: fixed;
-            display: block;
-            width: 150px;
-            margin-top: 5%;
-            margin-bottom: -5%;
-            margin-left: auto; 
-            margin-right: auto;
-            left: 0;
-            right: 0;
-        }
-
-        .btnChange {
-            position: fixed;
-            display: block;
-            width: 70px;
-            margin-top: 5%;
-            margin-bottom: -5%;
-            left: 10;
-            right: 0;
-        }
-
         #images {
-            margin: 100px 15%;
+            width: -webkit-fill-available;
+            margin-top: 100px;
         }
 
         #music {
-            margin: 5% 15%;
+            margin: 100px 15%;
         }
         
         .imagePicker {
-            display: block;
-            margin: 2% auto;
-            width: 80vw;
-            height: 30vh;
+            width: 250px;
+            height: 250px;
         }
 
         .songPicker {
-            margin: 5% auto;
+            margin: 7% auto;
             text-align: center;
         }
 
         #currentSong {
             margin: 0 auto;
             text-align: center;
+        }
+
+        .fixed {
+            width: -webkit-fill-available;
+            position: fixed;
+            text-align: center;
+            top: 25px;
+        }
+
+        .full-size {
+            width: -webkit-fill-available;
+            margin: 0 auto;
+        }
+
+        .btn {
+            padding: 5px 20px;
+        }
+
+        .menuRow2 {
+            position: fixed;
+            width: 200px;
+            height: 30px;
+            top: 50%;
+            left: 50%;
+            margin-top: -15px; /* Negative half of height. */
+            margin-left: -100px; /* Negative half of width. */
+        }
+
+        .menuRow {
+            position: fixed;
+            width: 250px;
+            height: 30px;
+            top: 50%;
+            left: 50%;
+            margin-top: -70px; /* Negative half of height. */
+            margin-left: -78px; /* Negative half of width. */
         }
 
     </style>
@@ -83,6 +103,7 @@
          * Changes the image
          **/
         function changeImage(url) {
+            console.log(url);
             document.getElementById("back").src =  url;
         }
 
@@ -157,7 +178,7 @@
         function showMaster() {
             readImages();
             readTracks();
-            document.getElementById('music').display = "none"
+            document.getElementById('music').style.display = "none"
             document.getElementById('master').style.display = "block";
             document.getElementById('slave').style.display = "none";
             document.getElementById('menu').style.display = "none";
@@ -205,37 +226,29 @@
         /**
          * Creates html from the json images 
          **/
+
+        var imageTypes = ['Ocean', 'City', 'Forest']; // Update with Image type
+
         function loadJSON(response)  {
             json = JSON.parse(response);
             console.log(json);
 
-            var title = document.createElement("h1");
-            title.appendChild(document.createTextNode('Nature'))
-            var div = document.createElement("div");
-            div.id = "nature";
-            div.appendChild(title);
-            document.getElementById('images').appendChild(div);
-            json['Nature'].forEach((element => {
-                var image = document.createElement("img");
-                image.src = 'assets/images/' + element;
-                image.className = 'imagePicker';
-                image.setAttribute("onclick", "sendData('" + element.toString() + "');")
-                document.getElementById('nature').appendChild(image);
-            }));
-
-            var title = document.createElement("h1");
-            title.appendChild(document.createTextNode('Ocean'))
-            var div = document.createElement("div");
-            div.id = "ocean";
-            div.appendChild(title);
-            document.getElementById('images').appendChild(div);
-            json['Ocean'].forEach((element => {
-                var image = document.createElement("img");
-                image.src = 'assets/images/' + element;
-                image.className = 'imagePicker';
-                image.setAttribute("onclick", "sendData('" + element.toString() + "');")
-                document.getElementById('ocean').appendChild(image);
-            }));
+            imageTypes.forEach((element) => {
+                var title = document.createElement("h1");
+                title.appendChild(document.createTextNode(element))
+                var div = document.createElement("div");
+                div.id = element;
+                div.style = "text-align: center"
+                div.appendChild(title);
+                document.getElementById('images').appendChild(div);
+                json[element].forEach((url => {
+                    var image = document.createElement("img");
+                    image.src = 'assets/images/' + url;
+                    image.className = 'img-thumbnail imagePicker';
+                    image.setAttribute("onclick", "sendData('" + url.toString() + "');")
+                    document.getElementById(element).appendChild(image);
+                }));
+            });
         };
 
         /**
@@ -271,25 +284,45 @@
 </head>
 
 <body onload="hideMenus()">
-   <div  id="menu">
-    <button onclick="showSlave()">Become Display</button>
-
-    <button onclick="showMaster()">Become Controller</button>
+   <div  id="menu" class="menu">
+    <div class="row menuRow">
+        <div class="col" style="padding: 0;">
+            <button class="btn btn-primary" onclick="showSlave()">Become Display</button>
+        </div>
+    </div>
+    <div class="row menuRow2" style="padding: 0;">
+        <div class="col">
+            <button class="btn btn-secondary" onclick="showMaster()">Become Controller</button>
+        </div>
+    </div>
    </div>
 
-   <div id="master" style="display: flexbox; width: 100vw;">
-    <button class="btnStop" onclick="pauseResume()">STOP MUSIC</button>
-    <button class="btnChange" onclick="moveMenu()">>>></button>
-       <div style="height: 15%;"></div>
-       <div id="images">
-       </div>
-       <div id="music">
-           <h4 style="margin-top: -10px; text-align: center;"><b id="currentSong"></b></h4>
-       </div>
-   </div>
+   <div id="master" style="width: 100vw;">
+    <div class="row fixed">
+        <div class="col ">
+          <button type="button" class="btn btn-primary"  onclick="moveMenu()"><<<</button>
+        </div>
+        <div class="col" >
+          <button type="button" class="btn btn-danger" onclick="pauseResume()">STOP MUSIC</button>
+        </div>
+        <div class="col">
+          <button type="button" class="btn btn-primary"  onclick="moveMenu()">>>></button>
+        </div>
+    </div>
 
+    <div class="row full-size">
+        <div class="col">
+            <div id="images"></div>
+            <div id="music">
+                <h4 style=" text-align: center;"><b id="currentSong"></b></h4>
+            </div>
+        </div>
+    </div>
+   </div>
    <div id="slave">
     <img class="imgSlave" id="back" src="" alt="">
    </div>
+
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-kQtW33rZJAHjgefvhyyzcGF3C5TFyBQBA13V1RKPf4uH+bwyzQxZ6CmMZHmNBEfJ" crossorigin="anonymous"></script>
 </body>
 </html>
