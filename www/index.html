@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Control</title>
     <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-kQtW33rZJAHjgefvhyyzcGF3C5TFyBQBA13V1RKPf4uH+bwyzQxZ6CmMZHmNBEfJ" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kQtW33rZJAHjgefvhyyzcGF3C5TFyBQBA13V1RKPf4uH+bwyzQxZ6CmMZHmNBEfJ"
+        crossorigin="anonymous"></script>
 
     <!-- Style -->
     <style>
-        
         body {
             margin: 0;
             padding: 0;
@@ -37,7 +40,7 @@
         #music {
             margin: 100px 15%;
         }
-        
+
         .imagePicker {
             width: 250px;
             height: 250px;
@@ -75,8 +78,10 @@
             height: 30px;
             top: 50%;
             left: 50%;
-            margin-top: -15px; /* Negative half of height. */
-            margin-left: -100px; /* Negative half of width. */
+            margin-top: -15px;
+            /* Negative half of height. */
+            margin-left: -100px;
+            /* Negative half of width. */
         }
 
         .menuRow {
@@ -85,260 +90,365 @@
             height: 30px;
             top: 50%;
             left: 50%;
-            margin-top: -70px; /* Negative half of height. */
-            margin-left: -78px; /* Negative half of width. */
+            margin-top: -70px;
+            /* Negative half of height. */
+            margin-left: -78px;
+            /* Negative half of width. */
         }
 
         .slave {
             display: grid;
             align-content: center;
         }
-
     </style>
 
 
 <body onload="hideMenus()">
-    <div  id="menu" class="menu">
-     <div class="row menuRow">
-         <div class="col" style="padding: 0;">
-             <button class="btn btn-primary" onclick="showSlave()">Become Display</button>
-         </div>
-     </div>
-     <div class="row menuRow2" style="padding: 0;">
-         <div class="col">
-             <button class="btn btn-secondary" onclick="showMaster()">Become Controller</button>
-         </div>
-     </div>
+    <input type="range" id="volume-slider">
+
+    <div id="menu" class="menu">
+        <div class="row menuRow">
+            <div class="col" style="padding: 0;">
+                <button class="btn btn-primary" onclick="showSlave()">Become Display</button>
+            </div>
+        </div>
+        <div class="row menuRow2" style="padding: 0;">
+            <div class="col">
+                <button class="btn btn-secondary" onclick="showMaster()">Become Controller</button>
+            </div>
+        </div>
     </div>
- 
+
     <div id="master" style="width: 100vw;">
-     <div class="row fixed">
-         <div class="col ">
-           <button type="button" class="btn btn-primary"  onclick="moveMenu()"><<<</button>
-         </div>
-         <div class="col" >
-           <button type="button" class="btn btn-danger" onclick="pauseResume()">STOP MUSIC</button>
-         </div>
-         <div class="col">
-           <button type="button" class="btn btn-primary"  onclick="moveMenu()">>>></button>
-         </div>
-     </div>
- 
-     <div  class="row full-size">
-         <div class="col">
-             <div id="images"></div>
-             <div id="music">
-                 <h4 style=" text-align: center;"><b id="currentSong"></b></h4>
-             </div>
-         </div>
-     </div>
+        <div class="row fixed">
+            <div class="col ">
+                <button type="button" class="btn btn-primary" onclick="moveMenu()">
+                    <<<</button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-danger" onclick="pauseResume()">STOP MUSIC</button>
+              
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-primary" onclick="moveMenu()">>>></button>
+            </div>
+        </div>
+
+        <div class="row full-size">
+            <div class="col">
+                <div id="images"></div>
+                <div id="music">
+                   <div>
+                    <input type="text" id="youtubeUrl">
+                    <button  onclick="sendVideo()">Send Youtube Video</button>
+                   </div>
+                    <h4 style=" text-align: center;"><b id="currentSong"></b></h4>
+                </div>
+            </div>
+        </div>
     </div>
     <div id="slave" class="slave">
-     <img class="imgSlave" id="back" src="" alt="">
+        <img class="imgSlave" id="back" src="" alt="">
     </div>
-    <input type="range" id="volume-slider">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-kQtW33rZJAHjgefvhyyzcGF3C5TFyBQBA13V1RKPf4uH+bwyzQxZ6CmMZHmNBEfJ" crossorigin="anonymous"></script>
- </body>
+    
+    <audio style="display:none;" id="youtube" autoplay controls loop></audio>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kQtW33rZJAHjgefvhyyzcGF3C5TFyBQBA13V1RKPf4uH+bwyzQxZ6CmMZHmNBEfJ"
+        crossorigin="anonymous"></script>
+</body>
 
-    <!-- Server -->
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        //const socket = io('http://192.168.1.55:7777/')
-        const socket = io('http://79.144.188.127:7777/')
-        
-        // IMAGE CONTROLS
-        socket.on('changeImage', data =>  changeImage(data))
-       
-        /**
-         * Changes the image
-         **/
-        function changeImage(url) {
-            console.log(url);
-            document.getElementById("back").src =  url;
-        }
+<!-- Server -->
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    //const socket = io('http://192.168.1.55:7777/')
+    const socket = io('http://79.144.188.127:7777/')
+
+    var audio_streams = {}
+    var audio_tag = document.getElementById('youtube');
+    var audioLast = true;
+
+    // IMAGE CONTROLS
+    socket.on('changeImage', data => changeImage(data))
+
+    /**
+     * Changes the image
+     **/
+    function changeImage(url) {
+        console.log(url);
+        document.getElementById("back").src = url;
+    }
 
 
-        /**
-         * Sends a new image
-         **/
-        function sendData(url) {
-            console.log(url);
-            socket.emit('sendImage', 'assets/images/' + url);
-            
-        }
+    /**
+     * Sends a new image
+     **/
+    function sendData(url) {
+        console.log(url);
+        socket.emit('sendImage', 'assets/images/' + url);
 
-        // AUDIO CONTROLS
+    }
 
-        socket.on('playAudio', data =>  playAudio(data))
-        var audioElement0 = document.createElement('audio');
-        var playing = false;
-        let volume = document.getElementById('volume-slider');
-        volume.addEventListener("change", function(e) {
-            audioElement0.volume = e.currentTarget.value / 100;
-        });
-        console.log("Test");
+    // AUDIO CONTROLS
 
-        /**
-         * Plays a track
-         **/
-        function playAudio(url) { 
-            playing = true;
-            audioElement0.src = url;
-            audioElement0.loop = true;
-            audioElement0.play(); 
-        }
+    socket.on('sendUrl', data => LoadVideoAudio(data));
+    socket.on('playAudio', data => playAudio(data))
 
-        function changeCurrentSong(name) {
-            document.getElementById("currentSong").innerHTML = name;
-        }
+    var audioElement0 = document.createElement('audio');
+    var playing = false;
+    let volume = document.getElementById('volume-slider');
+    volume.addEventListener("change", function (e) {
+        var newVal = e.currentTarget.value / 100;
+        audioElement0.volume = newVal;
+        audio_tag.volume = newVal;
+    });
+    console.log("Test");
 
-        /**
-         * Sends a track
-         **/
-        function sendAudio(url) {
+    /**
+     * Plays a track
+     **/
+    function playAudio(url) {
+        audioElement0.pause();
+        audio_tag.pause();
+        playing = true;
+        audioElement0.src = url;
+        audioElement0.loop = true;
+        audioLast = true;
+        audioElement0.play();
+    }
+
+    function changeCurrentSong(name) {
+        document.getElementById("currentSong").innerHTML = name;
+    }
+
+    /**
+     * Sends a track
+     **/
+    function sendAudio(url) {
+        audioElement0.pause();
+        socket.emit('sendAudio', 'assets/music/' + url);
+        playAudio('assets/music/' + url);
+    }
+
+    function sendVideo() {
+        var vid =  document.getElementById('youtubeUrl').value;
+        socket.emit('sendUrl', vid);
+        LoadVideoAudio(vid);
+    }
+
+    /**
+     * Sends an order to change the state
+     **/
+    function pauseResume() {
+        socket.emit('pauseResume');
+        changeAudioState();
+    }
+
+    /**
+     * Changes the state
+     **/
+    socket.on('pauseResume', data => changeAudioState())
+
+    function changeAudioState() {
+        if (playing)
+        {
             audioElement0.pause();
-            socket.emit('sendAudio', 'assets/music/' + url);
-            playAudio('assets/music/' + url);
+            audio_tag.pause();
+        }
+        else if(audioLast)
+        {
+            audioElement0.play();
+        } else {
+            audio_tag.play();
         }
 
-        /**
-         * Sends an order to change the state
-         **/
-        function pauseResume() {
-            socket.emit('pauseResume');
-            changeAudioState();
+        playing = !playing;
+    }
+
+    function LoadVideoAudio(vid) {
+        fetch("https://images" + ~~(Math.random() * 33) + "-focus-opensocial.googleusercontent.com/gadgets/proxy?container=none&url=" + encodeURIComponent(vid)).then(response => {
+            if (response.ok) {
+                response.text().then(data => {
+
+                    var regex = /(?:ytplayer\.config\s*=\s*|ytInitialPlayerResponse\s?=\s?)(.+?)(?:;var|;\(function|\)?;\s*if|;\s*if|;\s*ytplayer\.|;\s*<\/script)/gmsu;
+
+                    data = data.split('window.getPageData')[0];
+                    data = data.replace('ytInitialPlayerResponse = null', '');
+                    data = data.replace('ytInitialPlayerResponse=window.ytInitialPlayerResponse', '');
+                    data = data.replace('ytplayer.config={args:{raw_player_response:ytInitialPlayerResponse}};', '');
+
+
+                    var matches = regex.exec(data);
+                    var data = matches && matches.length > 1 ? JSON.parse(matches[1]) : false;
+
+                    console.log(data);
+
+                    var streams = [],
+                        result = {};
+
+                    if (data.streamingData) {
+
+                        if (data.streamingData.adaptiveFormats) {
+                            streams = streams.concat(data.streamingData.adaptiveFormats);
+                        }
+
+                        if (data.streamingData.formats) {
+                            streams = streams.concat(data.streamingData.formats);
+                        }
+
+                    } else {
+                        return false;
+                    }
+
+                    streams.forEach(function (stream, n) {
+                        var itag = stream.itag * 1,
+                            quality = false;
+                        console.log(stream);
+                        switch (itag) {
+                            case 139:
+                                quality = "48kbps";
+                                break;
+                            case 140:
+                                quality = "128kbps";
+                                break;
+                            case 141:
+                                quality = "256kbps";
+                                break;
+                            case 249:
+                                quality = "webm_l";
+                                break;
+                            case 250:
+                                quality = "webm_m";
+                                break;
+                            case 251:
+                                quality = "webm_h";
+                                break;
+                        }
+                        if (quality) audio_streams[quality] = stream.url;
+                    });
+                    audioElement0.pause();
+                    audio_tag.pause();
+                    audio_tag.src = audio_streams['256kbps'] || audio_streams['128kbps'] || audio_streams['48kbps'];
+                    audio_tag.loop = true;
+                    audio_tag.play();
+                    playing = true;
+                    audioLast = false;
+                })
+            }
+        });
+    }
+    // CONTROLS MAIN MENU
+    function showSlave() {
+        document.getElementById('master').style.display = "none";
+        document.getElementById('slave').style.display = "grid";
+        document.getElementById('menu').style.display = "none";
+    }
+
+    function showMaster() {
+        readImages();
+        readTracks();
+        document.getElementById('music').style.display = "none"
+        document.getElementById('master').style.display = "block";
+        document.getElementById('slave').style.display = "none";
+        document.getElementById('menu').style.display = "none";
+    }
+
+    function hideMenus() {
+        document.getElementById('master').style.display = "none";
+        document.getElementById('slave').style.display = "none";
+        document.getElementById('menu').style.display = "block";
+    }
+
+    // CONTROLS MOVEMENT OF MENUS
+    var images = true;
+    function moveMenu() {
+        if (images) {
+            document.getElementById('images').style.display = "none"
+            document.getElementById('music').style.display = "block"
         }
-
-        /**
-         * Changes the state
-         **/
-        socket.on('pauseResume', data => changeAudioState())
-
-        function changeAudioState() {
-            if(playing)
-                audioElement0.pause();
-            else
-                audioElement0.play();
-            
-            playing = !playing;
-        }
-    </script>
-
-    <script>
-        
-        // CONTROLS MAIN MENU
-        function showSlave() {
-            document.getElementById('master').style.display = "none";
-            document.getElementById('slave').style.display = "grid";
-            document.getElementById('menu').style.display = "none";
-        }
-
-        function showMaster() {
-            readImages();
-            readTracks();
+        else {
             document.getElementById('music').style.display = "none"
-            document.getElementById('master').style.display = "block";
-            document.getElementById('slave').style.display = "none";
-            document.getElementById('menu').style.display = "none";
+            document.getElementById('images').style.display = "block"
         }
+        images = !images;
 
-        function hideMenus() {
-            document.getElementById('master').style.display = "none";
-            document.getElementById('slave').style.display = "none";
-            document.getElementById('menu').style.display = "block";
-        }
+    }
+</script>
 
-        // CONTROLS MOVEMENT OF MENUS
-        var images = true;
-        function moveMenu() {
-            if(images) {
-                document.getElementById('images').style.display = "none"
-                document.getElementById('music').style.display = "block"
+<script>
+
+    /**
+     * Loads the images from the json
+     **/
+    function readImages() {
+        var xobj = new XMLHttpRequest();
+        xobj.overrideMimeType("application/json");
+        xobj.open('GET', 'json/images.json', true);
+        xobj.onreadystatechange = function () {
+            if (xobj.readyState == 4 && xobj.status == "200") {
+                loadJSON(xobj.responseText);
             }
-            else {
-                document.getElementById('music').style.display = "none"
-                document.getElementById('images').style.display = "block"
-            }
-            images = !images;
-                
         }
-    </script>
+        xobj.send(null)
+    }
 
-    <script>
-       
-        /**
-         * Loads the images from the json
-         **/
-        function readImages() {
-            var xobj = new XMLHttpRequest();
-            xobj.overrideMimeType("application/json");
-            xobj.open('GET', 'json/images.json', true);
-            xobj.onreadystatechange = function () {
-                if(xobj.readyState == 4 && xobj.status == "200")  {
-                    loadJSON(xobj.responseText);
-                }
+    /**
+     * Creates html from the json images 
+     **/
+
+    var imageTypes = ['Ocean', 'City', 'Forest', 'Bog', 'Cave', 'Sewers', 'Town', 'Valley', 'Tabern', 'Night', 'Temples']; // Update with Image type
+
+    function loadJSON(response) {
+        json = JSON.parse(response);
+        console.log(json);
+
+        imageTypes.forEach((element) => {
+            var title = document.createElement("h1");
+            title.appendChild(document.createTextNode(element))
+            var div = document.createElement("div");
+            div.id = element;
+            div.style = "text-align: center"
+            div.appendChild(title);
+            document.getElementById('images').appendChild(div);
+            json[element].forEach((url => {
+                var image = document.createElement("img");
+                image.src = 'assets/images/' + url;
+                image.className = 'img-thumbnail imagePicker';
+                image.setAttribute("onclick", "sendData('" + url.toString() + "');")
+                document.getElementById(element).appendChild(image);
+            }));
+        });
+    };
+
+    /**
+     * Loads the music from the json
+     **/
+    function readTracks() {
+        var xobj = new XMLHttpRequest();
+        xobj.overrideMimeType("application/json");
+        xobj.open('GET', 'json/music.json', true);
+        xobj.onreadystatechange = function () {
+            if (xobj.readyState == 4 && xobj.status == "200") {
+                loadJSONMusic(xobj.responseText);
             }
-            xobj.send(null)
         }
+        xobj.send(null)
+    }
 
-        /**
-         * Creates html from the json images 
-         **/
-
-        var imageTypes = ['Ocean', 'City', 'Forest', 'Bog', 'Cave', 'Sewers', 'Town', 'Valley', 'Tabern', 'Night', 'Temples']; // Update with Image type
-
-        function loadJSON(response)  {
-            json = JSON.parse(response);
-            console.log(json);
-
-            imageTypes.forEach((element) => {
-                var title = document.createElement("h1");
-                title.appendChild(document.createTextNode(element))
-                var div = document.createElement("div");
-                div.id = element;
-                div.style = "text-align: center"
-                div.appendChild(title);
-                document.getElementById('images').appendChild(div);
-                json[element].forEach((url => {
-                    var image = document.createElement("img");
-                    image.src = 'assets/images/' + url;
-                    image.className = 'img-thumbnail imagePicker';
-                    image.setAttribute("onclick", "sendData('" + url.toString() + "');")
-                    document.getElementById(element).appendChild(image);
-                }));
-            });
-        };
-
-        /**
-         * Loads the music from the json
-         **/
-         function readTracks() {
-            var xobj = new XMLHttpRequest();
-            xobj.overrideMimeType("application/json");
-            xobj.open('GET', 'json/music.json', true);
-            xobj.onreadystatechange = function () {
-                if(xobj.readyState == 4 && xobj.status == "200")  {
-                    loadJSONMusic(xobj.responseText);
-                }
-            }
-            xobj.send(null)
-        }
-
-        /**
-         * Creates html from the json images 
-         **/
-        function loadJSONMusic(response)  {
-            json = JSON.parse(response);
-            console.log(json);
-            json.forEach(element => {
-                var title = document.createElement("h3");
-                title.className = "songPicker";
-                title.appendChild(document.createTextNode(element['name'] + ' (' + element['type'] + ')'))
-                title.setAttribute("onclick", "sendAudio('" + element['url'] + "'); changeCurrentSong('" + element['name'] + "')")
-                document.getElementById('music').appendChild(title);
-            });
-        };
-    </script>
+    /**
+     * Creates html from the json images 
+     **/
+    function loadJSONMusic(response) {
+        json = JSON.parse(response);
+        console.log(json);
+        json.forEach(element => {
+            var title = document.createElement("h3");
+            title.className = "songPicker";
+            title.appendChild(document.createTextNode(element['name'] + ' (' + element['type'] + ')'))
+            title.setAttribute("onclick", "sendAudio('" + element['url'] + "'); changeCurrentSong('" + element['name'] + "')")
+            document.getElementById('music').appendChild(title);
+        });
+    };
+</script>
 </head>
 
 </html>
