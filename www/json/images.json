@@ -1,13 +1,59 @@
 {
     "Forest" : [
         "forest.jpg",
-        "magic_forest.jpg"
+        "magic_forest.jpg",
+        "forest2.jpg",
+        "forest3.jpg"
+    ],
+    "Bog" : [
+        "bog1.jpg",
+        "bog2.jpg",
+        "bog3.jpg",
+        "bog4.jpg"
+    ],
+    "Cave" : [
+        "cave1.jpg",
+        "cave2.jpg",
+        "cave3.jpg",
+        "cave4.jpg"
     ],
     "Ocean" : [
         "ocean.jpg"
     ],
     "City" : [
         "city1.jpg",
-        "city2.jpg"
+        "city2.jpg",
+        "city3.jpg",
+        "city4.jpg",
+        "city5.jpg",
+        "city6.jpg",
+        "city7.jpg"
+    ],
+    "Sewers" : [
+        "sewers1.jpg",
+        "sewer1.jpg"
+    ],
+    "Town" : [
+        "town1.jpg",
+        "town2.png",
+        "town3.jpg",
+        "town4.jpg",
+        "town5.jpg"
+    ],
+    "Valley" : [
+        "valley1.jpg",
+        "valley2.jpg"
+    ],
+    "Tabern" : [
+        "tabern1.jpg",
+        "tabern2.jpg",
+        "tabern3.png"
+    ],
+    "Night" : [
+        "night1.jpg",
+        "night2.jpg"
+    ],
+    "Temples" : [
+        "cathedral1.jpg"
     ]
 }
